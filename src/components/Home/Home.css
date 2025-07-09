@@ -1,0 +1,10 @@
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: '#cfe8fc';
+    background-color: rgb(223, 241, 247);
+    padding : 20px 0;
+    gap : 20px;
+}
