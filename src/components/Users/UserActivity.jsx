@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState ,forwardRef} from 'react'
 import { useParams } from 'react-router-dom'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,55 +7,216 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Slide from '@mui/material/Slide';
+import CloseIcon from '@mui/icons-material/Close';
+import Post from '../Post/Post';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+function PopUp(props) {
+
+    const [open, setOpen] = React.useState(false);
+    const [post, setPost] = useState();
+    const {isOpen, postId, setIsOpen} = props;
+
+    const getPost = () => {
+        fetch("http://localhost:8080/posts/" + postId, {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("tokenKey"),
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log(result);
+                setPost(result);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setIsOpen(false);
+    };
+
+    useEffect(()=>{
+        setOpen(isOpen)
+    },[isOpen])
+
+    useEffect(()=>{
+        getPost();
+    },[postId])
+
+    return(
+    <React.Fragment>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Open full-screen dialog
+      </Button>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        slots={{
+          transition: Transition,
+        }}
+      >
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Close
+            </Typography>
+          </Toolbar>
+        </AppBar>
+
+        {post && (
+            <Post 
+                likes = {post.postLikes}
+                postId={post.id} 
+                userId={post.userId} 
+                username={post.username}
+                title={post.title} 
+                text={post.text} 
+            />
+        )}
+
+      </Dialog>
+    </React.Fragment>
+    )
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
-function UserActivity() {
+function UserActivity(props) {
 
-    const {userId} = useParams();
+    //const {userId} = useParams();
+    const [error,setError] = useState(null)
+    const [isLoaded , setIsLoaded] = useState(false)
+    const [rows,setRows] = useState([]);
+    const {userId} = props;
+    const [isOpen, setIsOpen] = useState();
+    const [selectedPost, setSelectedPost] = useState();
+
+    const handleNotification = (postId) => {
+        setSelectedPost(postId);
+        setIsOpen(true);
+    };
+
+    const getActivity = () => {
+        fetch("http://localhost:8080/users/activity/" + userId,{
+            method : "GET",
+            headers : {
+                "Content-Type" : "application/json",
+                "Authorization" : localStorage.getItem("tokenKey"),
+            },
+        })
+        .then((res)=> res.json())
+        .then(
+            (result) => {
+                setIsLoaded(true);
+                setRows(result)
+                console.log(result)
+            },
+            (error)=>{
+                console.log(error)
+                setIsLoaded(true)
+                setError(error)
+            }
+        )
+    }
+
+    useEffect(() => {
+        getActivity()
+    },[])
 
     return (
-        <div>
-            <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+    <div>
+    {isOpen? <PopUp isOpen={isOpen} postId={selectedPost} setIsOpen={setIsOpen}/>: ""}
+    <Paper  sx={{ width: '100%',}}>
+      <TableContainer sx={{
+                        maxHeight: 440,
+                        minWidth: 100,
+                        maxWidth: 800,
+                        marginTop: 5,
+                    }}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+                User Activity
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-        </div>
+          </TableHead>
+
+          <TableBody>
+            {/* {rows.map((row) => {
+              return (
+                <Button onClick={() => handleNotification(row[1])}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.code} >
+                  <TableCell align="right">
+                  {row[3] + " " + row[0] + " your post"}
+                  </TableCell>
+                </TableRow>
+                </Button>
+              );
+              
+            })} */}
+
+             {rows.map((row, index) => {
+                if (Array.isArray(row)) { // ['liked', 12, 'emre'] gibi
+                    return (
+                        <Button onClick={() => handleNotification(row[1])} key={index} sx={{ width: '100%', padding: 0 }}>
+
+                        <TableRow hover role="checkbox" tabIndex={-1}>
+                            <TableCell align="right">
+                                {row[2] + " " + row[0] + " your post"}
+                            </TableCell>
+                        </TableRow>
+
+                        </Button>
+                    );
+                } else { // { id, title, user, ... } gibi post objesi
+                    return (
+                        <Button onClick={() => handleNotification(row.id)} key={index} sx={{ width: '100%', padding: 0 }}>
+
+                        <TableRow hover role="checkbox" tabIndex={-1}>
+                            <TableCell align="right">
+                            {row?.user?.username + " shared a post: " + row.title}
+                            </TableCell>
+                        </TableRow>
+
+                        </Button>
+                    );
+                }
+            })}
+          </TableBody>
+
+        </Table>
+      </TableContainer>
+    </Paper>
+    </div>
     )
 }
 

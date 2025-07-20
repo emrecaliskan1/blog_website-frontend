@@ -13,7 +13,7 @@ function User() {
     return (
         <div style={{display:'flex'}}>User : {userId}
             <AvatarCard/>
-            <UserActivity></UserActivity>
+            <UserActivity userId={userId}></UserActivity>
         
         </div>
         
