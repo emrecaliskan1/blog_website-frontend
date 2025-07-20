@@ -20,13 +20,19 @@ function Comment(props) {
         fullWidth
         value={text}
         startAdornment={
+
           <InputAdornment position='start'>
+
             <Link className='link' to={{pathname:"/users/"+userId}}>
+              
               <Avatar aria-label="recipe" className='small'>
                 {userName.charAt(0).toUpperCase()}
               </Avatar>
+
             </Link>
+            
           </InputAdornment>
+
         } style={{color:"black",backgroundColor:'white'}}
         ></OutlinedInput>
 

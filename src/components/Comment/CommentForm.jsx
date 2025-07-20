@@ -31,20 +31,21 @@ const saveComment = async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization" : localStorage.getItem("tokenKey")
       },
       body: JSON.stringify({
-        userId: userId,
+        userId: localStorage.getItem("currentUser"),
         postId: postId,
         text: text,
       }),
     });
 
     if (!res.ok) {
-      const text = await res.text(); // JSON değilse logla
+      const text = await res.text(); 
       throw new Error("Hata: " + text);
     }
 
-    const data = await res.json(); // artık güvenli
+    const data = await res.json(); 
     console.log("Yorum başarıyla eklendi:", data);
   } catch (err) {
     console.log("Yorum eklenirken hata:", err.message);
@@ -58,7 +59,7 @@ const saveComment = async () => {
   }
 
   const handleChange = (value) => {
-    setText(value)
+    setText(value);
   }
 
  
@@ -74,7 +75,6 @@ const saveComment = async () => {
         fullWidth 
         onChange={(i)=> handleChange(i.target.value)}
         startAdornment={
-         
          <InputAdornment position='start'>
             
             <Link className='link' to={{pathname:"/users/"+userId}}>
@@ -86,8 +86,8 @@ const saveComment = async () => {
             </Link>
 
           </InputAdornment>
-
         } 
+
         endAdornment = {
           <InputAdornment position='end' >
 
@@ -98,7 +98,7 @@ const saveComment = async () => {
                 }}
                 onClick={handleSubmit}>
                 Comment
-              </Button>
+            </Button>
 
           </InputAdornment>
         }

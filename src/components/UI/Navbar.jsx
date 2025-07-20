@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link ,useNavigate} from 'react-router-dom'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,12 +10,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { makeStyles } from '@mui/material';
 import './Navbar.css'
 import { blue, orange } from '@mui/material/colors';
+import { LockOpen } from '@mui/icons-material';
 
 
 
 function Navbar() {
 
   let userId = 11;
+  let navigate = useNavigate();
+
+  const Logout = () => {
+    localStorage.removeItem("tokenKey")
+    localStorage.removeItem("currentUser")
+    localStorage.removeItem("username")
+    navigate("/auth")
+  }
 
   return (
     <div> 
@@ -34,7 +43,14 @@ function Navbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link className='link' to="/">Home</Link>
           </Typography>
-          <Link className='link' to={{pathname:'/users/' + userId}}>User</Link>
+
+          <Typography variant='h6'>
+           {localStorage.getItem("currentUser") == null ? <Link className='link' to={{pathname:'/auth'}}>Login/Register</Link> : 
+            <div> <IconButton onClick={Logout}><LockOpen></LockOpen></IconButton>
+          <Link className='link' to={{pathname:'/users/' + localStorage.getItem("currentUser")}}>Profile</Link> 
+            </div>}
+          </Typography>
+
         </Toolbar>
       </AppBar>
     </Box>

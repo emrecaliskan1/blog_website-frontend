@@ -29,15 +29,20 @@ const ExpandMore = styled((props) => {
 
 function Post(props) {
  
-    const {title,text,userName,userId,postId} = props;
-    const [expanded, setExpanded] = React.useState(false);
-    const [liked,setLiked] = useState(false);
+    const {title,text,userName,userId,postId,likes} = props;
+    const [expanded, setExpanded] = useState(false);
+    // const [liked,setLiked] = useState(false);
 
     const [error,setError] = useState(null);
     const [isLoaded,setIsLoaded] = useState(false);
     const [postList,setPostList] = useState([]);
     const [commentList,setCommentList] = useState([]);
     const isInitialMount = useRef(true);
+    //const likeCount = likes.length;
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeCount,setLikeCount] = useState(likes.length || 0);
+    const [likeId,setLikeId] = useState(null);
+    let disabled = localStorage.getItem("currentUser") === null ? true : false
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -45,7 +50,24 @@ function Post(props) {
     };
 
     const handleLike = () => {
-        setLiked(!liked);
+        setIsLiked(!isLiked);
+        if(!isLiked){
+            saveLike();
+            setLikeCount(likeCount + 1 );
+        }
+        else{
+            deleteLike();
+            setLikeCount(likeCount -1);
+        }
+    }
+
+    const checkLikes = () => {
+        var likeControl = likes.find((like => ""+like.userId === localStorage.getItem("currentUser")));
+        if(likeControl != null){
+            setLikeId(likeControl.id);
+            setIsLiked(true);
+        }
+            
     }
 
     const refreshComments = () => {
@@ -63,12 +85,43 @@ function Post(props) {
         )
     }
 
+    const saveLike = () => {
+        fetch("http://localhost:8080/likes",{
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json",
+                "Authorization" : localStorage.getItem("tokenKey")
+            },
+            body:JSON.stringify({
+                postId : postId,
+                userId : localStorage.getItem("currentUser"),
+            }),
+        })
+        //.then((res) => res.json())
+        .catch((err) => console.log(err))
+    }
+
+    const deleteLike = () => {
+        fetch("http://localhost:8080/likes/"+ likeId,{
+            method : "DELETE",
+            headers : {
+                "Authorization" : localStorage.getItem("tokenKey"),
+            }
+        })
+        .catch((err)=>console.log(err))
+    }
+
     useEffect(() => {
         if (expanded) {
             refreshComments();
             console.log(commentList);
         }
     }, [expanded]);
+
+
+    useEffect(()=> {
+        checkLikes()
+    },[])
 
     
     return(
@@ -82,17 +135,34 @@ function Post(props) {
                 }
                 title={title}
             />
+
             <CardContent>
+
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {text}
                 </Typography>
 
             </CardContent>
-            <CardActions disableSpacing>
 
-            <IconButton onClick={handleLike} aria-label="add to favorites">
-                <FavoriteIcon style={liked?{color:'red'} : null}/>
+            <CardActions disableSpacing>
+            {disabled ?  <IconButton 
+            disabled
+            onClick={handleLike} 
+            aria-label="add to favorites">
+                <FavoriteIcon style={isLiked?{color:'red'} : null}/>
+                <IconButton>
+                    {likeCount}
+                </IconButton>
             </IconButton>
+            :
+            <IconButton 
+            onClick={handleLike} 
+            aria-label="add to favorites">
+                <FavoriteIcon style={isLiked?{color:'red'} : null}/>
+                <IconButton>
+                    {likeCount}
+                </IconButton>
+            </IconButton> }
 
             <ExpandMore
             expand={expanded}
@@ -103,7 +173,7 @@ function Post(props) {
             <InsertCommentIcon />
             </ExpandMore>
 
-        </CardActions>
+            </CardActions>
 
             <Collapse in={expanded} timeout="auto" unmountOnExit>
             
@@ -111,7 +181,9 @@ function Post(props) {
                {error ? "error" : isLoaded ? commentList.map(comment=>(
                 <Comment  userId={1} userName={"USER"} text={comment.text}></Comment>
                )) : "Loading"}
-               <CommentForm userId={11} userName={"USER"} postId={postId}></CommentForm>
+
+               {disabled ? "" : 
+               <CommentForm userId={11} userName={"USER"} postId={postId}></CommentForm>}
             </Container>
 
         </Collapse>
