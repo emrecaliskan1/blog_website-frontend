@@ -1,11 +1,11 @@
 import { Button, FormControl, FormHelperText, Input, InputLabel } from '@mui/material'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { PostWithAuth,GetWithAuth,PostWithoutAuth } from '../../Services/HttpService';
 
 function Auth() {
 
     const navigate = useNavigate();
-
     const [username, setUsername] = useState('');
     const [password,setPassword] = useState('');
 
@@ -27,16 +27,10 @@ function Auth() {
 
 
     const sendRequest = (path) => {
-         fetch("http://localhost:8080/auth/" + path,{
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json",
-            },
-            body : JSON.stringify({
-                username : username,
-                password:password,
-            }),
-         })
+        PostWithoutAuth("http://localhost:8080/auth/" + path,{
+            username : username,
+            password:password,
+        })
          .then((res)=>res.json())
          .then((result) => {localStorage.setItem("tokenKey",result.message)
                             localStorage.setItem("currentUser",result.userId)
@@ -48,16 +42,16 @@ function Auth() {
   return (
     <div style={{marginTop:'60px',display:'flex',alignItems:'center',justifyContent:'center'}}>
         <FormControl >
+
             <InputLabel>Username</InputLabel>
             <Input onChange={(i)=>handleUsername(i.target.value)}/>
             <InputLabel style={{top:80}}>Passsword</InputLabel>
             <Input onChange={(i)=>handlePassword(i.target.value)}/>
             
             <Button 
-            variant='contained'
-            style={{marginTop:60,background:'linear-gradient(45deg,#2196F3 30%, #21CBF3 90%)',color:'white'}}
-            onClick={()=>handleButton("register")}
-            >
+                variant='contained'
+                style={{marginTop:60,background:'linear-gradient(45deg,#2196F3 30%, #21CBF3 90%)',color:'white'}}
+                onClick={()=>handleButton("register")}>
                 REGISTER
             </Button>
            
@@ -66,10 +60,10 @@ function Auth() {
             <Button 
             variant='contained'
             style={{marginTop:-5,background:'linear-gradient(45deg,#2196F3 30%, #21CBF3 90%)',color:'white'}}
-            onClick={()=>handleButton("login")}
-            >
+            onClick={()=>handleButton("login")}>
                 LOGIN
             </Button>
+            
         </FormControl>
     </div>
   )

@@ -5,23 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Checkbox from '@mui/material/Checkbox';
-import Avatar from '@mui/material/Avatar';
-
-const useStyles = makeStyles({
-    root : {
-        maxWidth:345,
-        margin : 100,
-    }
-})
 
 const style = {
   position: 'absolute',
@@ -35,28 +20,14 @@ const style = {
   p: 4,
 };
 
-function AvatarCard() {
+function AvatarCard(props) {
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+    const [open, setOpen] = React.useState(false);
+    const {username,userId} = props;
+    const [checked, setChecked] = React.useState([1]);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-  const [checked, setChecked] = React.useState([1]);
-
-//   const handleToggle = (value) => () => {
-//     const currentIndex = checked.indexOf(value);
-//     const newChecked = [...checked];
-
-//     if (currentIndex === -1) {
-//       newChecked.push(value);
-//     } else {
-//       newChecked.splice(currentIndex, 1);
-//     }
-
-//     setChecked(newChecked);
-//   };
-  
-  
     return (
     <div>
         <Card sx={{ maxWidth: 345,margin : 10 }}>
@@ -65,16 +36,22 @@ function AvatarCard() {
                 image="/static/images/cards/contemplative-reptile.jpg"
                 title="User avatar"
             />
+
             <CardContent>
+
                 <Typography gutterBottom variant="h5" component="div">
-                Username
+                 {username}
                 </Typography>
+
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                User Info
+                User {props.username} Info
                 </Typography>
+
             </CardContent>
+
             <CardActions>
-                <Button size="small">Change Avatar</Button>
+              {localStorage.getItem("currentUser") === props.userId ? <Button size="small">Change Avatar</Button>
+              : ""}
                 <Button size="small">Learn More</Button>
             </CardActions>
       </Card> 
@@ -85,8 +62,7 @@ function AvatarCard() {
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box sx={style}>
          <div>Hello</div>
         </Box>

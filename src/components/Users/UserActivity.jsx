@@ -49,7 +49,6 @@ function PopUp(props) {
 
     const handleClickOpen = () => {
         setOpen(true);
-    
     };
 
     const handleClose = () => {
@@ -60,6 +59,7 @@ function PopUp(props) {
     useEffect(()=>{
         setOpen(isOpen)
     },[isOpen])
+    
 
     useEffect(()=>{
         getPost();
@@ -99,7 +99,7 @@ function PopUp(props) {
                 likes = {post.postLikes}
                 postId={post.id} 
                 userId={post.userId} 
-                username={post.username}
+                username={post.username || post.user?.username}
                 title={post.title} 
                 text={post.text} 
             />
@@ -113,7 +113,6 @@ function PopUp(props) {
 
 function UserActivity(props) {
 
-    //const {userId} = useParams();
     const [error,setError] = useState(null)
     const [isLoaded , setIsLoaded] = useState(false)
     const [rows,setRows] = useState([]);
@@ -171,21 +170,9 @@ function UserActivity(props) {
           </TableHead>
 
           <TableBody>
-            {/* {rows.map((row) => {
-              return (
-                <Button onClick={() => handleNotification(row[1])}>
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code} >
-                  <TableCell align="right">
-                  {row[3] + " " + row[0] + " your post"}
-                  </TableCell>
-                </TableRow>
-                </Button>
-              );
-              
-            })} */}
 
              {rows.map((row, index) => {
-                if (Array.isArray(row)) { // ['liked', 12, 'emre'] gibi
+                if (Array.isArray(row)) { 
                     return (
                         <Button onClick={() => handleNotification(row[1])} key={index} sx={{ width: '100%', padding: 0 }}>
 
@@ -197,7 +184,7 @@ function UserActivity(props) {
 
                         </Button>
                     );
-                } else { // { id, title, user, ... } gibi post objesi
+                } else { 
                     return (
                         <Button onClick={() => handleNotification(row.id)} key={index} sx={{ width: '100%', padding: 0 }}>
 

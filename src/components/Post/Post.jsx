@@ -13,9 +13,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import { Link } from 'react-router-dom';
 import './Post.css'
-import { Container } from '@mui/material';
+import { Container, setRef } from '@mui/material';
 import Comment from '../Comment/Comment';
 import CommentForm from '../Comment/CommentForm';
+import { PostWithAuth } from '../../Services/HttpService';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -29,20 +30,21 @@ const ExpandMore = styled((props) => {
 
 function Post(props) {
  
-    const {title,text,userName,userId,postId,likes} = props;
+    const {title,text,username,userId,postId,likes} = props;
     const [expanded, setExpanded] = useState(false);
-    // const [liked,setLiked] = useState(false);
-
+    const [refresh,setRefresh] = useState(false);
     const [error,setError] = useState(null);
     const [isLoaded,setIsLoaded] = useState(false);
     const [postList,setPostList] = useState([]);
     const [commentList,setCommentList] = useState([]);
-    const isInitialMount = useRef(true);
-    //const likeCount = likes.length;
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount,setLikeCount] = useState(likes.length || 0);
     const [likeId,setLikeId] = useState(null);
     let disabled = localStorage.getItem("currentUser") === null ? true : false
+
+    const setCommentRefresh = () => {
+        setRefresh(true)
+    }
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -83,19 +85,13 @@ function Post(props) {
                 setIsLoaded(true)
                 setError(error)}
         )
+        setRefresh(false)
     }
 
     const saveLike = () => {
-        fetch("http://localhost:8080/likes",{
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json",
-                "Authorization" : localStorage.getItem("tokenKey")
-            },
-            body:JSON.stringify({
-                postId : postId,
-                userId : localStorage.getItem("currentUser"),
-            }),
+        PostWithAuth("http://localhost:8080/likes",{
+            postId : postId,
+            userId : localStorage.getItem("currentUser"),
         })
         //.then((res) => res.json())
         .catch((err) => console.log(err))
@@ -114,9 +110,8 @@ function Post(props) {
     useEffect(() => {
         if (expanded) {
             refreshComments();
-            console.log(commentList);
         }
-    }, [expanded]);
+    }, [refresh]);
 
 
     useEffect(()=> {
@@ -129,9 +124,10 @@ function Post(props) {
              <Card  sx={{width: 950,textAlign:'left',margin:'10px'}}>
             <CardHeader
                 avatar={
-                    <Link className='link' to={{pathname:'/users/' + userId}}><Avatar sx={{ bgcolor: red[500] ,background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)'}} aria-label="recipe">
-                        {userName?.charAt(0).toUpperCase() || ''}
-                    </Avatar></Link>
+                    <Link className='link' to={{pathname:'/users/' + userId}}>
+                        <Avatar sx={{ bgcolor: red[500] ,background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)'}} aria-label="recipe">
+                        {username?.charAt(0).toUpperCase() || ''}</Avatar>
+                    </Link>
                 }
                 title={title}
             />
@@ -179,11 +175,11 @@ function Post(props) {
             
             <Container fixed className='container'>
                {error ? "error" : isLoaded ? commentList.map(comment=>(
-                <Comment  userId={1} userName={"USER"} text={comment.text}></Comment>
+                <Comment  userId={comment.userId} username={comment.username} text={comment.text}></Comment>
                )) : "Loading"}
 
                {disabled ? "" : 
-               <CommentForm userId={11} userName={"USER"} postId={postId}></CommentForm>}
+               <CommentForm userId={localStorage.getItem("currentUser")} username={localStorage.getItem("username")} postId={postId} setCommentRefresh={setCommentRefresh}></CommentForm>}
             </Container>
 
         </Collapse>

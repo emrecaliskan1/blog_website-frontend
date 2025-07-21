@@ -2,67 +2,32 @@ import { Avatar, Button, CardContent, Input, InputAdornment, OutlinedInput } fro
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import './Comment.css'
+import { PostWithAuth } from '../../Services/HttpService';
 
 function CommentForm(props) {
 
-  const {userId,userName,postId} = props;
+  const {userId,username,postId,setCommentRefresh} = props;
   const [text,setText] = useState('');
-
-// const saveComment = async () => {
-//   fetch("http://localhost:8080/comments",{
-//     method:"POST",
-//     headers:{
-//       "Content-Type" : "application/json",
-//     },
-//     body:JSON.stringify({
-//       postId:postId,
-//       userId:userId,
-//       text:text
-//     }),
-//   })
-//   .then((res)=>res.json())
-//   .catch((err)=>console.log(err))
-
-//   }
   
-const saveComment = async () => {
-  try {
-    const res = await fetch("http://localhost:8080/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : localStorage.getItem("tokenKey")
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem("currentUser"),
-        postId: postId,
-        text: text,
-      }),
-    });
-
-    if (!res.ok) {
-      const text = await res.text(); 
-      throw new Error("Hata: " + text);
-    }
-
-    const data = await res.json(); 
-    console.log("Yorum başarıyla eklendi:", data);
-  } catch (err) {
-    console.log("Yorum eklenirken hata:", err.message);
-  }
-};
-
+  const saveComment = async () => {
+    PostWithAuth("http://localhost:8080/comments",{
+      postId:postId,
+      userId:userId,
+      text:text,
+    })
+    .then((res)=>res.json())
+    .catch((err)=>console.log(err))
+  };
 
   const handleSubmit = () => {
       saveComment();
       setText('');
+      setCommentRefresh();
   }
 
   const handleChange = (value) => {
     setText(value);
   }
-
- 
 
   return (
 
@@ -80,7 +45,7 @@ const saveComment = async () => {
             <Link className='link' to={{pathname:"/users/"+userId}}>
               
               <Avatar aria-label="recipe" className='small'>
-                {userName.charAt(0).toUpperCase()}
+                {username.charAt(0).toUpperCase()}
               </Avatar>
 
             </Link>
