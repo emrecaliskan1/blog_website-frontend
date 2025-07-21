@@ -1,23 +1,56 @@
 import { Avatar, Button, CardContent, Input, InputAdornment, OutlinedInput } from '@mui/material';
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Comment.css'
-import { PostWithAuth } from '../../Services/HttpService';
+import { PostWithAuth, RefreshToken } from '../../Services/HttpService';
 
 function CommentForm(props) {
 
   const {userId,username,postId,setCommentRefresh} = props;
   const [text,setText] = useState('');
+  const navigate = useNavigate();
+
+  const Logout = () => {
+    localStorage.removeItem("tokenKey")
+    localStorage.removeItem("currentUser")
+    localStorage.removeItem("username")
+    localStorage.removeItem("refreshKey")
+    navigate("/auth")
+  }
   
-  const saveComment = async () => {
-    PostWithAuth("http://localhost:8080/comments",{
-      postId:postId,
-      userId:userId,
-      text:text,
+  const saveComment =  () => {
+    PostWithAuth("http://localhost:8080/comments", {
+      postId: postId,
+      userId: userId,
+      text: text,
     })
-    .then((res)=>res.json())
-    .catch((err)=>console.log(err))
-  };
+    .then((res) => {
+            if(!res.ok) {
+                RefreshToken()
+                .then((res) => { if(!res.ok) {
+                    Logout();
+                } else {
+                   return res.json()
+                }})
+                .then((result) => {
+                    console.log(result)
+
+                    if(result != undefined){
+                        localStorage.setItem("tokenKey",result.accessToken);
+                        saveComment();
+                        setCommentRefresh();
+                    }})
+                .catch((err) => {
+                    console.log(err)
+                })
+            } else 
+            res.json()
+        })
+          .catch((err) => {
+            console.log(err)
+          })
+    }
+
 
   const handleSubmit = () => {
       saveComment();

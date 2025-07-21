@@ -16,13 +16,13 @@ import { LockOpen } from '@mui/icons-material';
 
 function Navbar() {
 
-  let userId = 11;
   let navigate = useNavigate();
 
   const Logout = () => {
     localStorage.removeItem("tokenKey")
     localStorage.removeItem("currentUser")
     localStorage.removeItem("username")
+    localStorage.removeItem("refreshKey")
     navigate("/auth")
   }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -13,7 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import { Link } from 'react-router-dom';
 import './Post.css'
-import { Container, setRef } from '@mui/material';
+import { Container } from '@mui/material';
 import Comment from '../Comment/Comment';
 import CommentForm from '../Comment/CommentForm';
 import { PostWithAuth } from '../../Services/HttpService';
