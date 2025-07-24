@@ -10,6 +10,7 @@ import { Button, InputAdornment, OutlinedInput } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import './PostForm.css'
 
 
 function PostForm(props) {
@@ -78,7 +79,6 @@ function PostForm(props) {
   const action = (
     <React.Fragment>
       <Button color="inherit" size="large" onClick={handleClose}>
-        UNDO
       </Button> 
       <IconButton
         size="large"
@@ -92,32 +92,40 @@ function PostForm(props) {
   );
 
   return (
-    <div>
+    <div className='postForm-root'>
          <Snackbar
                 open={open}
                 autoHideDuration={1000}
                 onClose={handleClose}
                 message="Post is succesfull!"
                 action={action}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                  ContentProps={{
                     sx: {
-                        background: '##7feb94',
+                        background: 'linear-gradient(90deg, #59e1a6ff 0%, #399166ff 100%)',
                         color: 'white',
-                        fontWeight: 'bold',
+                        fontWeight: 600,
                         fontSize: '16px',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 24px 0 rgba(46, 96, 120, 0.13)',
+                        px: 3,
+                        py: 2,
+                        letterSpacing: 1,
+                        border: '2px solid #eaf6f9ff'
                         }
                     }}
                 />
          <div className='postContainer'>
-             <Card  sx={{width:1000,textAlign:'left',margin:'9px'}}>
+            <Card className='postForm-card' sx={{width:1000,textAlign:'left',margin:'9px'}}>
             <CardHeader
                 avatar={
-                    <Link className='link' to={{pathname:'/users/' + userId}}><Avatar sx={{ bgcolor: red[500],background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)' }} aria-label="recipe">
+                    <Link className='link' to={{pathname:'/users/' + userId}}>
+                        <Avatar className="postForm-avatar" sx={{ bgcolor: red[500],background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)' }} aria-label="recipe">
                         {username.charAt(0).toUpperCase()}
                     </Avatar></Link>
                 }
                 title= {<OutlinedInput 
+                    className="postForm-titleInput"
                     id='outlined_adorment-amount'
                     multiline
                     placeholder='Title'
@@ -129,6 +137,7 @@ function PostForm(props) {
             <CardContent>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {<OutlinedInput 
+                    className="postForm-textInput"
                     id='outlined_adorment-amount'
                     multiline
                     placeholder='Text'
@@ -139,6 +148,7 @@ function PostForm(props) {
                     endAdornment = {
                         <InputAdornment position='end'>
                             <Button
+                            className="postForm-button"
                             variant='contained'
                             style={{background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)',
                                 color : 'white' 

@@ -1,4 +1,60 @@
-.postContainer{
-    width: 900 ;
+
+.postContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 
+/* Kart */
+.post-card {
+  background: #f8fafb;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px 0 rgba(46, 96, 120, 0.08);
+  border: 1px solid #e3eaf0;
+  width: 100%;
+  max-width: 950px;
+  margin: 10px 0;
+  transition: box-shadow 0.2s;
+}
+.post-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(46, 96, 120, 0.16);
+}
+
+/* Avatar ve başlık */
+.post-avatar-link {
+  text-decoration: none;
+}
+.post-avatar {
+  background: linear-gradient(135deg, #2e6078 60%, #a4cde0 100%) !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+.post-title {
+  color: #2e6078;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* İçerik */
+.post-content {
+  color: #2e6078;
+  font-size: 1rem;
+}
+
+/* Butonlar */
+.post-actions .MuiIconButton-root {
+  border-radius: 8px !important;
+}
+
+/* Yorumlar container'ı */
+.post-comments-container {
+  background: #f3f8fa;
+  border-radius: 0 0 16px 16px;
+  padding: 12px 0 8px 0;
+  margin: 0;
+  width: 100%;
+  max-width: 900px;
+  min-width: 300px;
+  box-sizing: border-box;
+}

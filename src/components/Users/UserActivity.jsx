@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import CloseIcon from '@mui/icons-material/Close';
 import Post from '../Post/Post';
+import './UserActivity.css'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -68,17 +69,28 @@ function PopUp(props) {
     return(
     <React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Open full-screen dialog
+        
       </Button>
       <Dialog
-        fullScreen
+        BackdropProps={{
+            style: { backgroundColor: "rgba(0,0,0,0.4)" }
+        }}
+        PaperProps={{
+         className: "user-activity-modal-paper"
+        }}
+        maxWidth="sm"
+        fullWidth
         open={open}
         onClose={handleClose}
         slots={{
           transition: Transition,
         }}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar 
+            position="static"
+            sx={{ backgroundColor: "#2a6078", borderRadius: "16px 16px 0 0" }}
+            elevation={0}
+        >
           <Toolbar>
             <IconButton
               edge="start"
@@ -94,16 +106,18 @@ function PopUp(props) {
           </Toolbar>
         </AppBar>
 
-        {post && (
-            <Post 
-                likes = {post.postLikes}
-                postId={post.id} 
-                userId={post.userId} 
-                username={post.username || post.user?.username}
-                title={post.title} 
-                text={post.text} 
-            />
-        )}
+         <div style={{ padding: 24, minWidth: 350, maxWidth: 600 }}>
+                {post && (
+                    <Post
+                        likes={post.postLikes}
+                        postId={post.id}
+                        userId={post.userId}
+                        username={post.username || post.user?.username}
+                        title={post.title}
+                        text={post.text}
+                    />
+                )}
+            </div>
 
       </Dialog>
     </React.Fragment>
@@ -138,10 +152,8 @@ function UserActivity(props) {
             (result) => {
                 setIsLoaded(true);
                 setRows(result)
-                console.log(result)
             },
             (error)=>{
-                console.log(error)
                 setIsLoaded(true)
                 setError(error)
             }
@@ -153,20 +165,37 @@ function UserActivity(props) {
     },[])
 
     return (
-    <div>
+    <div className="user-activity-root">
     {isOpen? <PopUp isOpen={isOpen} postId={selectedPost} setIsOpen={setIsOpen}/>: ""}
-    <Paper  sx={{ width: '100%',}}>
+    <Paper className="user-activity-table-paper">
       <TableContainer sx={{
                         maxHeight: 440,
                         minWidth: 100,
                         maxWidth: 800,
                         marginTop: 5,
-                    }}>
+                    }}
+                    className="user-activity-table-container">
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow>
-                User Activity
-            </TableRow>
+            <TableCell
+                align="center"
+                colSpan={1}
+                style={{
+                    fontWeight: 700,
+                    fontSize: 22,
+                    color: "#3846ab",
+                    background: "#f4f7fb",
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                    letterSpacing: 1.2,
+                    padding: "24px 0 18px 0"
+                }}
+            >
+                <span style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    <span style={{marginRight: 8}}>📝</span>
+                    User Activity
+                </span>
+            </TableCell>
           </TableHead>
 
           <TableBody>

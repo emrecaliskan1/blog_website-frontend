@@ -30,7 +30,7 @@ function User() {
 
 
     return (
-        <div style={{display:'flex'}}>User : {userId}
+        <div style={{display:'flex'}}>
             {user? <AvatarCard userId={userId} username={user.username} />: ""}
 
             {localStorage.getItem("currentUser") == userId 

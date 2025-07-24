@@ -1,13 +1,15 @@
-import { Button, FormControl, FormHelperText, Input, InputLabel } from '@mui/material'
+import { Alert, Button, FormControl, FormHelperText, Input, InputLabel, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {PostWithoutAuth } from '../../Services/HttpService';
+import './Auth.css'
 
 function Auth({setCurrentUser,setUsername}) {
 
     const navigate = useNavigate();
     const [username, setUsernameLocal] = useState('');
     const [password,setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleUsername = (value) => {
         setUsernameLocal(value)
@@ -18,11 +20,13 @@ function Auth({setCurrentUser,setUsername}) {
     }
 
     const handleButton = (path) => {
+        if (!username.trim() || !password.trim()) {
+            setErrorMessage("Username and password cannot be empty!");
+            return;
+        }
         sendRequest(path)
         setUsernameLocal("")
         setPassword("")
-        // if(path === 'login')
-        //     navigate("/")
     }
 
 
@@ -32,40 +36,68 @@ function Auth({setCurrentUser,setUsername}) {
             password:password,
         })
          .then((res)=>res.json())
-         .then((result) => {localStorage.setItem("tokenKey",result.accessToken)
-                            localStorage.setItem("refreshKey",result.refreshToken)
-                            localStorage.setItem("currentUser",result.userId)
-                            localStorage.setItem("username",username)
-                            if(setCurrentUser) setCurrentUser(result.userId)
-                            if(setUsername) setUsername(username)
-                            if(path=='login') navigate("/")    
-                        
-                        })
-         .catch((err)=> console.log(err))
+         .then((result) => {
+                if (result.accessToken) {
+                    localStorage.setItem("tokenKey", result.accessToken)
+                    localStorage.setItem("refreshKey", result.refreshToken)
+                    localStorage.setItem("currentUser", result.userId)
+                    localStorage.setItem("username", username)
+                    if (setCurrentUser) setCurrentUser(result.userId)
+                    if (setUsername) setUsername(username)
+                    setErrorMessage("")
+                    if (path === 'login') navigate("/")
+                } else {
+                    setErrorMessage(result.message || "Username or password is incorrect!");
+                }
+            })
+         .catch(() => {
+                setErrorMessage("An error occurred. Please try again.");
+            })
     }
     
 
   return (
-    <div style={{marginTop:'60px',display:'flex',alignItems:'center',justifyContent:'center'}}>
-        <FormControl >
+    <div className='auth-root'>
+        <FormControl className="auth-form">
 
-            <InputLabel>Username</InputLabel>
-            <Input onChange={(i)=>handleUsername(i.target.value)}/>
-            <InputLabel style={{top:80}}>Passsword</InputLabel>
-            <Input onChange={(i)=>handlePassword(i.target.value)}/>
+            {errorMessage && (
+                    <Alert severity="error" className="auth-error" >
+                        {errorMessage}
+                    </Alert>
+                )}
+
+              <TextField
+                className="auth-input"
+                label="Username"
+                variant="outlined"
+                value={username}
+                onChange={(i) => handleUsername(i.target.value)}
+                margin="normal"
+                fullWidth
+            />
+            <TextField
+                className="auth-input"
+                label="Password"
+                variant="outlined"
+                type="password"
+                value={password}
+                onChange={(i) => handlePassword(i.target.value)}
+                margin="normal"
+                fullWidth
+            />
             
             <Button 
                 variant='contained'
-                style={{marginTop:60,background:'linear-gradient(45deg,#2196F3 30%, #21CBF3 90%)',color:'white'}}
+                className="auth-button"
                 onClick={()=>handleButton("register")}>
                 REGISTER
             </Button>
            
-            <FormHelperText style={{margin:20}}>Are you already registered?</FormHelperText>
+            <FormHelperText className="auth-helper">Are you already registered?</FormHelperText>
             
             <Button 
             variant='contained'
-            style={{marginTop:-5,background:'linear-gradient(45deg,#2196F3 30%, #21CBF3 90%)',color:'white'}}
+            className="auth-button"
             onClick={()=>handleButton("login")}>
                 LOGIN
             </Button>

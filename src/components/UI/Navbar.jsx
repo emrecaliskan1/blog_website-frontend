@@ -29,11 +29,12 @@ function Navbar({currentUser,setCurrentUser,username}) {
   }
 
   return (
-    <div> 
-      <Box className='nav' sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{backgroundColor:'#3846ab'}}>
+    <div className="navbar-root"> 
+      <Box className="navbar-box" sx={{ flexGrow: 1 }}>
+      <AppBar className="navbar-appbar" position="static" >
         <Toolbar>
           <IconButton
+            className="navbar-menu-btn"
             size="large"
             edge="start"
             color="inherit"
@@ -43,14 +44,17 @@ function Navbar({currentUser,setCurrentUser,username}) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link className='link' to="/">Home</Link>
+            <Link className="navbar-link" to="/">Home</Link>
           </Typography>
 
           <Typography variant='h6'>
-           {currentUser == null ? <Link className='link' to={{pathname:'/auth'}}>Login/Register</Link> 
+           {currentUser == null ? <Link className='navbar-link' to={{pathname:'/auth'}}>Login/Register</Link> 
            : 
-            <div> <IconButton onClick={Logout}><LockOpen></LockOpen></IconButton>
-          <Link className='link' to={`/users/${currentUser}`}>Profile</Link> 
+            <div  className="navbar-user-actions"> 
+              <IconButton onClick={Logout}
+              ><LockOpen></LockOpen>
+              </IconButton>
+              <Link className="navbar-link" to={`/users/${currentUser}`}>Profile</Link> 
             </div>}
           </Typography>
 

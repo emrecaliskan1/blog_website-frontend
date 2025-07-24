@@ -1,0 +1,29 @@
+.avatar-card-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 150px;
+  padding-top: 100px;
+}
+
+.avatar-card {
+  width: 340px;
+  min-height: 420px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(46, 96, 120, 0.18);
+  margin: 18px 0;
+  padding: 0;
+  transition: box-shadow 0.2s;
+}
+
+.avatar-card:hover {
+  box-shadow: 0 12px 40px 0 rgba(46, 96, 120, 0.22);
+}
+
+.avatar-card-media {
+  height: 260px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  object-fit: cover;
+}

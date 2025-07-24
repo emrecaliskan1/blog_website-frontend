@@ -121,26 +121,26 @@ function Post(props) {
     
     return(
         <div className='postContainer'>
-             <Card  sx={{width: 950,textAlign:'left',margin:'10px'}}>
+            <Card className='post-card' sx={{width: 950,textAlign:'left',margin:'10px'}}>
             <CardHeader
                 avatar={
-                    <Link className='link' to={{pathname:'/users/' + userId}}>
-                        <Avatar sx={{ bgcolor: red[500] ,background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)'}} aria-label="recipe">
+                    <Link className='post-avatar-link' to={{pathname:'/users/' + userId}}>
+                        <Avatar className='post-avatar' sx={{ bgcolor: red[500] ,background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)'}} aria-label="recipe">
                         {username?.charAt(0).toUpperCase() || ''}</Avatar>
                     </Link>
                 }
-                title={title}
+                title={<span className="post-title">{title}</span>}
             />
 
-            <CardContent>
+            <CardContent className="post-content">
 
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" >
                     {text}
                 </Typography>
 
             </CardContent>
 
-            <CardActions disableSpacing>
+            <CardActions className="post-actions" disableSpacing>
             {disabled ?  <IconButton 
             disabled
             onClick={handleLike} 
@@ -173,7 +173,7 @@ function Post(props) {
 
             <Collapse in={expanded} timeout="auto" unmountOnExit>
             
-            <Container fixed className='container'>
+            <Container fixed className='post-comments-container'>
                {error ? "error" : isLoaded ? commentList.map(comment=>(
                 <Comment  userId={comment.userId} username={comment.username} text={comment.text}></Comment>
                )) : "Loading"}

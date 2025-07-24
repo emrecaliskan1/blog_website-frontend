@@ -2,6 +2,7 @@ import { Avatar, Button, CardContent, Input, InputAdornment, OutlinedInput } fro
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import './Comment.css'
+import './CommentForm.css'
 import { PostWithAuth, RefreshToken } from '../../Services/HttpService';
 
 function CommentForm(props) {
@@ -91,9 +92,7 @@ function CommentForm(props) {
 
             <Button
                 variant='contained'
-                style={{background:'linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)',
-                color : 'white' 
-                }}
+                className='commentForm-button'
                 onClick={handleSubmit}>
                 Comment
             </Button>

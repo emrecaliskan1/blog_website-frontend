@@ -19,16 +19,16 @@ function Comment(props) {
           startAdornment={
             <InputAdornment position='start'>
 
-              <Link className='link' to={{pathname:"/users/"+userId}}>
+              <Link className="comment-link" to={{pathname:"/users/"+userId}}>
                 
-                <Avatar aria-label="recipe" className='small'>
+                <Avatar aria-label="recipe" className="comment-avatar">
                   {username.charAt(0).toUpperCase()}
                 </Avatar>
 
               </Link>
               
             </InputAdornment>
-        } style={{color:"black",backgroundColor:'white'}}
+        } className="comment-input"
         ></OutlinedInput>
 
     </CardContent>

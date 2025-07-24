@@ -1,0 +1,70 @@
+.auth-root {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafb;
+}
+
+/* .auth-form {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(46, 96, 120, 0.10);
+  padding: 48px 48px 36px 48px;
+  display: flex;
+  flex-direction: column;
+  min-width: 420px;
+  max-width: 620px !important;
+  gap: 22px;
+  border: 1.5px solid #a4cde0;
+} */
+
+.auth-form.MuiFormControl-root {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(46, 96, 120, 0.10);
+  padding: 48px 48px 36px 48px;
+  display: flex;
+  flex-direction: column;
+  min-width: 420px;
+  max-width: 620px;
+  gap: 22px;
+  border: 1.5px solid #a4cde0;
+}
+
+.auth-input .MuiInputBase-input, 
+.auth-input input {
+  font-size: 1.18rem;
+  padding: 18px 16px;
+}
+
+.auth-input .MuiOutlinedInput-root {
+  border-radius: 12px;
+}
+
+.auth-button {
+  background: linear-gradient(90deg, #2e6078 60%, #a4cde0 100%) !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: none;
+  margin-top: 12px;
+  margin-bottom: 0;
+  font-size: 1.13rem;
+  padding: 13px 0;
+  transition: background 0.2s;
+}
+.auth-button:hover {
+  background: linear-gradient(90deg, #1e4252 60%, #7fb3c9 100%) !important;
+}
+
+.auth-helper {
+  margin: 8px 0 0 0;
+  color: #2e6078 !important;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.auth-error {
+  margin-bottom: 10px;
+}

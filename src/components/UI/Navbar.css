@@ -1,6 +1,64 @@
-.link{
-    text-decoration: none;
-    box-shadow: none;
-    color: white;
+.navbar-root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
+.navbar-box {
+  width: 100%;
+}
+
+.navbar-appbar {
+  background: #2a6078 !important;
+  box-shadow: 0 2px 12px 0 rgba(46, 96, 120, 0.08);
+  border-bottom: 1px solid #a4cde0;
+}
+
+.navbar-toolbar {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+}
+
+.navbar-menu-btn {
+  color: #fff !important;
+}
+
+.navbar-title {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.navbar-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0 12px;
+  transition: color 0.2s;
+  font-size: 1.08rem;
+}
+.navbar-link:hover {
+  color: #a4cde0;
+  text-decoration: underline;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-logout-btn {
+  color: #fff !important;
+  margin-right: 4px;
+  transition: color 0.2s;
+}
+.navbar-logout-btn:hover {
+  color: #a4cde0 !important;
+}

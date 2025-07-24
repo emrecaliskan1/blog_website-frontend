@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import './Avatar.css'
 
 const style = {
   position: 'absolute',
@@ -29,11 +30,12 @@ function AvatarCard(props) {
     const handleClose = () => setOpen(false);
 
     return (
-    <div>
-        <Card sx={{ maxWidth: 345,margin : 10 }}>
+    <div className="avatar-card-root">
+        <Card className="avatar-card" >
             <CardMedia
+                className="avatar-card-media"
                 sx={{ height: 240 }}
-                image="/static/images/cards/contemplative-reptile.jpg"
+                image="/public/default-profile-picture1.jpg"
                 title="User avatar"
             />
 
@@ -44,29 +46,44 @@ function AvatarCard(props) {
                 </Typography>
 
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                User {props.username} Info
+                  Click for User Info
                 </Typography>
 
             </CardContent>
 
             <CardActions>
-              {localStorage.getItem("currentUser") === props.userId ? <Button size="small">Change Avatar</Button>
-              : ""}
-                <Button size="small">Learn More</Button>
+                <Button onClick={handleOpen} size="small">Learn More</Button>
             </CardActions>
       </Card> 
 
 
-      <Button style={{marginLeft:75,bottom:70}} onClick={handleOpen}>Open modal</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
-        <Box sx={style}>
-         <div>Hello</div>
-        </Box>
-      </Modal>
+       <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          BackdropProps={{
+            style: { backgroundColor: "rgba(0,0,0,0.4)" }
+          }}
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
+              User Info
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }} align="center">
+              <strong>User ID:</strong> {userId}
+              <br />
+              <strong>Username:</strong> {username}
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{ mt: 3, display: 'block', mx: 'auto' }}
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+          </Box>
+        </Modal>
     </div>
     
   )
