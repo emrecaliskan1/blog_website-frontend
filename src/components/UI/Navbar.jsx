@@ -14,7 +14,7 @@ import { LockOpen } from '@mui/icons-material';
 
 
 
-function Navbar() {
+function Navbar({currentUser,setCurrentUser,username}) {
 
   let navigate = useNavigate();
 
@@ -23,7 +23,9 @@ function Navbar() {
     localStorage.removeItem("currentUser")
     localStorage.removeItem("username")
     localStorage.removeItem("refreshKey")
-    navigate("/auth")
+    if(setCurrentUser)
+      setCurrentUser(null)
+    //navigate("/auth")
   }
 
   return (
@@ -45,9 +47,10 @@ function Navbar() {
           </Typography>
 
           <Typography variant='h6'>
-           {localStorage.getItem("currentUser") == null ? <Link className='link' to={{pathname:'/auth'}}>Login/Register</Link> : 
+           {currentUser == null ? <Link className='link' to={{pathname:'/auth'}}>Login/Register</Link> 
+           : 
             <div> <IconButton onClick={Logout}><LockOpen></LockOpen></IconButton>
-          <Link className='link' to={{pathname:'/users/' + localStorage.getItem("currentUser")}}>Profile</Link> 
+          <Link className='link' to={`/users/${currentUser}`}>Profile</Link> 
             </div>}
           </Typography>
 

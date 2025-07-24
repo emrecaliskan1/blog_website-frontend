@@ -3,14 +3,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {PostWithoutAuth } from '../../Services/HttpService';
 
-function Auth() {
+function Auth({setCurrentUser,setUsername}) {
 
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [username, setUsernameLocal] = useState('');
     const [password,setPassword] = useState('');
 
     const handleUsername = (value) => {
-        setUsername(value)
+        setUsernameLocal(value)
     }
 
     const handlePassword = (value) => {
@@ -19,10 +19,10 @@ function Auth() {
 
     const handleButton = (path) => {
         sendRequest(path)
-        setUsername("")
+        setUsernameLocal("")
         setPassword("")
-        if(path === 'login')
-            navigate("/")
+        // if(path === 'login')
+        //     navigate("/")
     }
 
 
@@ -35,7 +35,12 @@ function Auth() {
          .then((result) => {localStorage.setItem("tokenKey",result.accessToken)
                             localStorage.setItem("refreshKey",result.refreshToken)
                             localStorage.setItem("currentUser",result.userId)
-                            localStorage.setItem("username",username)})
+                            localStorage.setItem("username",username)
+                            if(setCurrentUser) setCurrentUser(result.userId)
+                            if(setUsername) setUsername(username)
+                            if(path=='login') navigate("/")    
+                        
+                        })
          .catch((err)=> console.log(err))
     }
     
