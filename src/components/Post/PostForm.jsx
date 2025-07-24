@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import './PostForm.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function PostForm(props) {
 
@@ -23,7 +24,7 @@ function PostForm(props) {
 
     const savePost = async() => {
         try {
-        const response = await fetch("http://localhost:8080/posts", {
+        const response = await fetch(`${API_BASE_URL}/posts`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -35,20 +36,16 @@ function PostForm(props) {
                 text: text,
             }),
         });
-
         if (response.ok) {
             await refreshPosts();
             setIsSent(true);
             setText('');
             setTitle('');
             handleClick();
-        } else {
-            console.log("Post işlemi başarısız");
         }
     } catch (err) {
         console.log(err);
-    }
-    }
+    }}
     
     const handleSubmit = () => {
        savePost();
@@ -64,28 +61,24 @@ function PostForm(props) {
         setIsSent(false);
     }
 
-    const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
+    const handleClose = (reason) => {
+        if (reason === 'clickaway') return;
+        setOpen(false);
   };
 
-  const handleClick = () => {
-    setOpen(true);
+    const handleClick = () => {
+        setOpen(true);
   };
 
 
   const action = (
     <React.Fragment>
-      <Button color="inherit" size="large" onClick={handleClose}>
-      </Button> 
+      <Button color="inherit" size="large" onClick={handleClose}></Button> 
       <IconButton
         size="large"
         aria-label="close"
         color="default"
-        onClick={handleClose}
-      >
+        onClick={handleClose}>
         <CloseIcon fontSize="medium" />
       </IconButton>
     </React.Fragment>

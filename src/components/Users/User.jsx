@@ -4,14 +4,16 @@ import AvatarCard from '../Avatar/Avatar';
 import UserActivity from './UserActivity';
 import { GetWithAuth } from '../../Services/HttpService';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 function User() {
 
     const {userId} = useParams();
     const [user,setUser] = useState();
 
-    const getUser =() => {
-        GetWithAuth("http://localhost:8080/users/" +userId)
+    const getUser =() => { 
+        GetWithAuth(`${API_BASE_URL}/users/${userId}`)
         .then((res)=>res.json())
         .then(
             (result) => {

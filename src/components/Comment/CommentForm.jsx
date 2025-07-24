@@ -1,12 +1,18 @@
 import { Avatar, Button, CardContent, Input, InputAdornment, OutlinedInput } from '@mui/material';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import './Comment.css'
 import './CommentForm.css'
 import { PostWithAuth, RefreshToken } from '../../Services/HttpService';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function CommentForm(props) {
 
+  const [open, setOpen] = useState(false);
   const {userId,username,postId,setCommentRefresh} = props;
   const [text,setText] = useState('');
   const navigate = useNavigate();
@@ -20,7 +26,7 @@ function CommentForm(props) {
   }
   
   const saveComment =  () => {
-    PostWithAuth("http://localhost:8080/comments", {
+    PostWithAuth(`${API_BASE_URL}/comments`, {
       postId: postId,
       userId: userId,
       text: text,
@@ -45,7 +51,7 @@ function CommentForm(props) {
                     console.log(err)
                 })
             } else 
-            res.json()
+            res.json().then(()=>handleSuccess())
         })
           .catch((err) => {
             console.log(err)
@@ -63,7 +69,53 @@ function CommentForm(props) {
     setText(value);
   }
 
+  const handleSuccess = () => {
+    setOpen(true);
+    setText('');
+    setCommentRefresh();
+  };
+
+  const handleClose = (reason) => {
+    if (reason === 'clickaway') return;
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="large"
+        aria-label="close"
+        color="default"
+        onClick={handleClose}>
+        <CloseIcon fontSize="medium" />
+      </IconButton>
+    </React.Fragment>
+  );
+
   return (
+    <>
+    <Snackbar
+        open={open}
+        autoHideDuration={1000}
+        onClose={handleClose}
+        message="Comment is succesfull!"
+        action={action}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        ContentProps={{
+          sx: {
+            background: 'linear-gradient(90deg, #59e1a6ff 0%, #399166ff 100%)',
+            color: 'white',
+            fontWeight: 600,
+            fontSize: '16px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 24px 0 rgba(46, 96, 120, 0.13)',
+            px: 3,
+            py: 2,
+            letterSpacing: 1,
+            border: '2px solid #eaf6f9ff'
+          }
+        }}
+      />
 
     <CardContent className='comment'>
         
@@ -104,6 +156,7 @@ function CommentForm(props) {
         ></OutlinedInput>
 
     </CardContent>
+    </>
   )
 }
 

@@ -18,6 +18,8 @@ import Comment from '../Comment/Comment';
 import CommentForm from '../Comment/CommentForm';
 import { PostWithAuth } from '../../Services/HttpService';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -74,7 +76,7 @@ function Post(props) {
 
     const refreshComments = () => {
         if (!postId) return;
-        fetch("http://localhost:8080/comments?postId="+postId)
+        fetch(`${API_BASE_URL}/comments?postId=+${postId}`)
         .then(res=>res.json())
         .then(
             (result) => {
@@ -89,7 +91,7 @@ function Post(props) {
     }
 
     const saveLike = () => {
-        PostWithAuth("http://localhost:8080/likes",{
+        PostWithAuth(`${API_BASE_URL}/likes`,{
             postId : postId,
             userId : localStorage.getItem("currentUser"),
         })
@@ -98,7 +100,7 @@ function Post(props) {
     }
 
     const deleteLike = () => {
-        fetch("http://localhost:8080/likes/"+ likeId,{
+        fetch(`${API_BASE_URL}/likes/${likeId}`,{
             method : "DELETE",
             headers : {
                 "Authorization" : localStorage.getItem("tokenKey"),

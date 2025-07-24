@@ -77,6 +77,7 @@ function AvatarCard(props) {
             </Typography>
             <Button
               variant="contained"
+              style={{backgroundColor:"#2a6078"}}
               sx={{ mt: 3, display: 'block', mx: 'auto' }}
               onClick={handleClose}
             >
