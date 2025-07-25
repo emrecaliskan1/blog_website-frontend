@@ -137,7 +137,7 @@ function UserActivity(props) {
     };
 
     const getActivity = () => {
-        fetch("http://localhost:8080/users/activity/" + userId,{
+        fetch(`${API_BASE_URL}/users/activity/${userId}`,{
             method : "GET",
             headers : {
                 "Content-Type" : "application/json",

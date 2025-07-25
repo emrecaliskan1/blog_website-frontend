@@ -1,21 +1,9 @@
-/* .container{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    background-color: '#cfe8fc';
-    background-color: rgb(223, 241, 247);
-    padding : 20px 0;
-    gap : 20px;
-} */
-
 body {
   background: #ececec;
   margin: 0;
   font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
 }
 
-/* Ana container */
 .container {
   display: flex;
   flex-direction: column;
@@ -26,7 +14,6 @@ body {
   gap: 32px;
 }
 
-/* PostForm ve Post kartları arasında boşluk */
 .postContainer {
   width: 100%;
   max-width: 950px;

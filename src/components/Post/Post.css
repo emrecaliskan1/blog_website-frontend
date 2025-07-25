@@ -1,4 +1,3 @@
-
 .postContainer {
   width: 100%;
   display: flex;
@@ -6,7 +5,7 @@
   margin-bottom: 24px;
 }
 
-/* Kart */
+
 .post-card {
   background: #f8fafb;
   border-radius: 16px;
@@ -21,7 +20,6 @@
   box-shadow: 0 8px 32px 0 rgba(46, 96, 120, 0.16);
 }
 
-/* Avatar ve başlık */
 .post-avatar-link {
   text-decoration: none;
 }
@@ -36,18 +34,15 @@
   font-size: 1.1rem;
 }
 
-/* İçerik */
 .post-content {
   color: #2e6078;
   font-size: 1rem;
 }
 
-/* Butonlar */
 .post-actions .MuiIconButton-root {
   border-radius: 8px !important;
 }
 
-/* Yorumlar container'ı */
 .post-comments-container {
   background: #f3f8fa;
   border-radius: 0 0 16px 16px;
