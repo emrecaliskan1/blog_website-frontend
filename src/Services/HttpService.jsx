@@ -1,5 +1,5 @@
-export const PostWithAuth = (url,body) => {
-    var request = fetch(url, {
+export const PostWithAuth = async (url,body) => {
+    const response = await fetch(url, {
         method:'POST',
         headers:{
             "Content-Type" : "application/json",
@@ -7,22 +7,22 @@ export const PostWithAuth = (url,body) => {
         },
         body: JSON.stringify(body)
     })
-    return request
+    return response
 }
 
-export const PostWithoutAuth = (url,body) => {
-    var request = fetch(url,{
+export const PostWithoutAuth = async (url,body) => {
+    const response = await fetch(url,{
         method:"POST",
         headers:{
             "Content-Type" : "application/json"
         },
         body: JSON.stringify(body)
     })
-    return request
+    return response
 }
 
-export const PutWithAuth = (url,body) => {
-    var request = fetch(url,{
+export const PutWithAuth = async (url,body) => {
+    const response = await fetch(url,{
         method : "PUT",
         headers : {
             "Content-Type" : "application/json",
@@ -30,22 +30,22 @@ export const PutWithAuth = (url,body) => {
         },
         body: JSON.stringify(body)
     })
-    return request
+    return response
 }
 
-export const GetWithAuth = (url) => {
-    var request = fetch(url,{
+export const GetWithAuth = async (url) => {
+    const response = await fetch(url,{
         method : "GET",
         headers:{
             "Content-Type" : "application/json",
             "Authorization" : localStorage.getItem("tokenKey")
         }
     })
-    return request
+    return response
 }
 
-export const RefreshToken = () => {
-    var request = fetch("http://localhost:8080/auth/refresh",{
+export const RefreshToken = async () => {
+    const response = await fetch("http://localhost:8080/auth/refresh",{
         method:"POST",
         headers:{
             "Content-Type" : "application/json"
@@ -55,5 +55,5 @@ export const RefreshToken = () => {
             refreshToken : localStorage.getItem("refreshKey")
         })
     })
-    return request;
+    return response;
 }

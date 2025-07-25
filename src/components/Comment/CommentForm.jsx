@@ -25,38 +25,67 @@ function CommentForm(props) {
     navigate("/auth")
   }
   
-  const saveComment =  () => {
-    PostWithAuth(`${API_BASE_URL}/comments`, {
-      postId: postId,
-      userId: userId,
-      text: text,
-    })
-    .then((res) => {
-            if(!res.ok) {
-                RefreshToken()
-                .then((res) => { if(!res.ok) {
-                    Logout();
-                } else {
-                   return res.json()
-                }})
-                .then((result) => {
-                    console.log(result)
+  // const saveComment =  () => {
+  //   PostWithAuth(`${API_BASE_URL}/comments`, {
+  //     postId: postId,
+  //     userId: userId,
+  //     text: text,
+  //   })
+  //   .then((res) => {
+  //           if(!res.ok) {
+  //               RefreshToken()
+  //               .then((res) => { if(!res.ok) {
+  //                   Logout();
+  //               } else {
+  //                  return res.json()
+  //               }})
+  //               .then((result) => {
+  //                   console.log(result)
 
-                    if(result != undefined){
-                        localStorage.setItem("tokenKey",result.accessToken);
-                        saveComment();
-                        setCommentRefresh();
-                    }})
-                .catch((err) => {
-                    console.log(err)
-                })
-            } else 
-            res.json().then(()=>handleSuccess())
-        })
-          .catch((err) => {
-            console.log(err)
-          })
+  //                   if(result != undefined){
+  //                       localStorage.setItem("tokenKey",result.accessToken);
+  //                       saveComment();
+  //                       setCommentRefresh();
+  //                   }})
+  //               .catch((err) => {
+  //                   console.log(err)
+  //               })
+  //           } else 
+  //           res.json().then(()=>handleSuccess())
+  //       })
+  //         .catch((err) => {
+  //           console.log(err)
+  //         })
+  //   }
+
+  const saveComment = async () => {
+    try {
+      const res = await PostWithAuth(`${API_BASE_URL}/comments`, {
+        postId: postId,
+        userId: userId,
+        text: text,
+      });
+
+      if (!res.ok) {
+        const refreshRes = await RefreshToken();
+        if (!refreshRes.ok) {
+          Logout();
+        } else {
+          const result = await refreshRes.json();
+          if (result !== undefined) {
+            localStorage.setItem("tokenKey", result.accessToken);
+            await saveComment();
+            setCommentRefresh();
+          }
+        }
+      } else {
+        await res.json();
+        handleSuccess();
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
 
 
   const handleSubmit = () => {

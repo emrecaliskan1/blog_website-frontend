@@ -16,19 +16,17 @@ function Home() {
         refreshPosts();
     },[])
     
-    const refreshPosts = () => {
-        fetch(`${API_BASE_URL}/posts`)
-        .then(res=>res.json())
-        .then(
-            (result) => {
-                setIsLoaded(true)
-                setPostList(result)
-            },
-            (error) => {
-                setIsLoaded(true)
-                setError(error)}
-        )
-    }
+    const refreshPosts = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/posts`);
+            const result = await res.json();
+            setIsLoaded(true);
+            setPostList(result);
+        } catch (error) {
+            setIsLoaded(true);
+            setError(error);
+        }
+    };
 
     if(error){
         return (

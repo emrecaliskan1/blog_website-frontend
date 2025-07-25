@@ -74,40 +74,43 @@ function Post(props) {
             
     }
 
-    const refreshComments = () => {
+    const refreshComments = async () => {
         if (!postId) return;
-        fetch(`${API_BASE_URL}/comments?postId=+${postId}`)
-        .then(res=>res.json())
-        .then(
-            (result) => {
-                setIsLoaded(true)
-                setCommentList(result)
-            },
-            (error) => {
-                setIsLoaded(true)
-                setError(error)}
-        )
-        setRefresh(false)
-    }
+        try {
+            const res = await fetch(`${API_BASE_URL}/comments?postId=${postId}`);
+            const result = await res.json();
+            setIsLoaded(true);
+            setCommentList(result);
+        } catch (error) {
+            setIsLoaded(true);
+            setError(error);
+        }
+        setRefresh(false);
+    };
 
-    const saveLike = () => {
-        PostWithAuth(`${API_BASE_URL}/likes`,{
-            postId : postId,
-            userId : localStorage.getItem("currentUser"),
-        })
-        //.then((res) => res.json())
-        .catch((err) => console.log(err))
-    }
+    const saveLike = async () => {
+        try {
+            await PostWithAuth(`${API_BASE_URL}/likes`, {
+                postId: postId,
+                userId: localStorage.getItem("currentUser"),
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
-    const deleteLike = () => {
-        fetch(`${API_BASE_URL}/likes/${likeId}`,{
-            method : "DELETE",
-            headers : {
-                "Authorization" : localStorage.getItem("tokenKey"),
-            }
-        })
-        .catch((err)=>console.log(err))
-    }
+    const deleteLike = async () => {
+        try {
+            await fetch(`${API_BASE_URL}/likes/${likeId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": localStorage.getItem("tokenKey"),
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         if (expanded) {
@@ -143,47 +146,45 @@ function Post(props) {
             </CardContent>
 
             <CardActions className="post-actions" disableSpacing>
-            {disabled ?  <IconButton 
-            disabled
-            onClick={handleLike} 
-            aria-label="add to favorites">
-                <FavoriteIcon style={isLiked?{color:'red'} : null}/>
-                <IconButton>
-                    {likeCount}
-                </IconButton>
-            </IconButton>
-            :
-            <IconButton 
-            onClick={handleLike} 
-            aria-label="add to favorites">
-                <FavoriteIcon style={isLiked?{color:'red'} : null}/>
-                <IconButton>
-                    {likeCount}
-                </IconButton>
-            </IconButton> }
+                {disabled ?  
+                <IconButton 
+                    disabled
+                    onClick={handleLike} 
+                    aria-label="add to favorites">
+                        <FavoriteIcon style={isLiked?{color:'red'} : null}/>
 
-            <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-            >
-            <InsertCommentIcon />
-            </ExpandMore>
-
+                        <IconButton>
+                            {likeCount}
+                        </IconButton>
+                </IconButton>
+                :
+                <IconButton 
+                    onClick={handleLike} 
+                    aria-label="add to favorites">
+                    <FavoriteIcon style={isLiked?{color:'red'} : null}/>
+                    <IconButton>
+                        {likeCount}
+                    </IconButton>
+                </IconButton> }
+                <ExpandMore
+                    expand={expanded}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                    >
+                    <InsertCommentIcon />
+                </ExpandMore>
             </CardActions>
 
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-            
-            <Container fixed className='post-comments-container'>
-               {error ? "error" : isLoaded ? commentList.map(comment=>(
-                <Comment  userId={comment.userId} username={comment.username} text={comment.text}></Comment>
-               )) : "Loading"}
+                <Container fixed className='post-comments-container'>
+                {error ? "error" : isLoaded ? commentList.map(comment=>(
+                    <Comment  userId={comment.userId} username={comment.username} text={comment.text}></Comment>
+                )) : "Loading"}
 
-               {disabled ? "" : 
-               <CommentForm userId={localStorage.getItem("currentUser")} username={localStorage.getItem("username")} postId={postId} setCommentRefresh={setCommentRefresh}></CommentForm>}
-            </Container>
-
+                {disabled ? "" : 
+                <CommentForm userId={localStorage.getItem("currentUser")} username={localStorage.getItem("username")} postId={postId} setCommentRefresh={setCommentRefresh}></CommentForm>}
+                </Container>
         </Collapse>
 
         </Card>

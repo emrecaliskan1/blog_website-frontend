@@ -18,6 +18,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Post from '../Post/Post';
 import './UserActivity.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -28,25 +30,45 @@ function PopUp(props) {
     const [post, setPost] = useState();
     const {isOpen, postId, setIsOpen} = props;
 
-    const getPost = () => {
-        fetch("http://localhost:8080/posts/" + postId, {
-            method: "GET",
-            headers: {
-                "Authorization": localStorage.getItem("tokenKey"),
-                "Content-Type": "application/json"
-            }
-        })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                console.log(result);
-                setPost(result);
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
+    // const getPost = () => {
+    //     fetch("http://localhost:8080/posts/" + postId, {
+    //         method: "GET",
+    //         headers: {
+    //             "Authorization": localStorage.getItem("tokenKey"),
+    //             "Content-Type": "application/json"
+    //         }
+    //     })
+    //     .then(res => res.json())
+    //     .then(
+    //         (result) => {
+    //             console.log(result);
+    //             setPost(result);
+    //         },
+    //         (error) => {
+    //             console.log(error);
+    //         }
+    //     );
+    // };
+
+    const getPost = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": localStorage.getItem("tokenKey"),
+                    "Content-Type": "application/json"
+                }
+            });
+            const result = await res.json();
+            setPost(result);
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    useEffect(()=>{
+            getPost();
+        },[postId])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -62,9 +84,7 @@ function PopUp(props) {
     },[isOpen])
     
 
-    useEffect(()=>{
-        getPost();
-    },[postId])
+    
 
     return(
     <React.Fragment>

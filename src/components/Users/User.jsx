@@ -12,19 +12,29 @@ function User() {
     const {userId} = useParams();
     const [user,setUser] = useState();
 
-    const getUser =() => { 
-        GetWithAuth(`${API_BASE_URL}/users/${userId}`)
-        .then((res)=>res.json())
-        .then(
-            (result) => {
-                console.log(result)
-                setUser(result.payload)
-            },
-            (err)=>{
-                console.log(err)
-            }
-        )
+    // const getUser =() => { 
+    //     GetWithAuth(`${API_BASE_URL}/users/${userId}`)
+    //     .then((res)=>res.json())
+    //     .then(
+    //         (result) => {
+    //             console.log(result)
+    //             setUser(result.payload)
+    //         },
+    //         (err)=>{
+    //             console.log(err)
+    //         }
+    //     )
+    // }
+
+    const getUser = async () => { 
+    try {
+        const res = await GetWithAuth(`${API_BASE_URL}/users/${userId}`);
+        const result = await res.json();
+        setUser(result.payload);
+    } catch (err) {
+        console.log(err);
     }
+}
 
     useEffect(()=>{
         getUser()

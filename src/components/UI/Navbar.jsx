@@ -4,10 +4,8 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { makeStyles } from '@mui/material';
 import './Navbar.css'
 import { blue, orange } from '@mui/material/colors';
 import { LockOpen } from '@mui/icons-material';
@@ -25,7 +23,6 @@ function Navbar({currentUser,setCurrentUser,username}) {
     localStorage.removeItem("refreshKey")
     if(setCurrentUser)
       setCurrentUser(null)
-    //navigate("/auth")
   }
 
   return (
