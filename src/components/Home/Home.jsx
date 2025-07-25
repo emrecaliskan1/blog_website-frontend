@@ -22,6 +22,7 @@ function Home() {
             const result = await res.json();
             setIsLoaded(true);
             setPostList(result);
+            console.log(result)
         } catch (error) {
             setIsLoaded(true);
             setError(error);
@@ -57,12 +58,21 @@ function Home() {
     }
 
     else{
+        const sortedPosts = [...postList].sort((a, b) => new Date(a.create_date) - new Date(b.create_date)).reverse();
         return(
             <div className='container'>
                 {localStorage.getItem("currentUser")=== null ? "" :  
                     <PostForm userId = {localStorage.getItem("currentUser")} username={localStorage.getItem("username")} refreshPosts = {refreshPosts}/>} 
-                {postList.map(post=>(     
-                   <Post likes = {post.postLikes} postId={post.id} userId = {post.userId} username={post.username} title={post.title} text={post.text}
+                {sortedPosts.map(post=>(     
+                   <Post 
+                        key={post.id} 
+                        likes = {post.postLikes} 
+                        postId={post.id} 
+                        userId = {post.userId} 
+                        username={post.username} 
+                        title={post.title} 
+                        text={post.text}
+                        createdAt = {post.createdAt}
                    ></Post>        
                 ))}
             </div>

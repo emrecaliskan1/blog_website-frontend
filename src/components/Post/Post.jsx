@@ -32,7 +32,7 @@ const ExpandMore = styled((props) => {
 
 function Post(props) {
  
-    const {title,text,username,userId,postId,likes} = props;
+    const {title,text,username,userId,postId,likes,createdAt} = props;
     const [expanded, setExpanded] = useState(false);
     const [refresh,setRefresh] = useState(false);
     const [error,setError] = useState(null);
@@ -65,7 +65,7 @@ function Post(props) {
         }
     }
 
-    const checkLikes = () => {
+    const checkLikes = () => {  
         var likeControl = likes.find((like => ""+like.userId === localStorage.getItem("currentUser")));
         if(likeControl != null){
             setLikeId(likeControl.id);
@@ -100,6 +100,7 @@ function Post(props) {
     };
 
     const deleteLike = async () => {
+        if (!likeId) return;
         try {
             await fetch(`${API_BASE_URL}/likes/${likeId}`, {
                 method: "DELETE",
@@ -126,7 +127,27 @@ function Post(props) {
     
     return(
         <div className='postContainer'>
-            <Card className='post-card' sx={{width: 950,textAlign:'left',margin:'10px'}}>
+            <Card className='post-card' sx={{width: 950,textAlign:'left',margin:'10px',position:'relative'}}>
+                <span
+                    style={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 24,
+                        color: '#888',
+                        fontSize: 13,
+                        opacity: 0.7,
+                        fontWeight: 500,
+                        letterSpacing: 0.5,
+                    }}
+                    >
+                    {createdAt ? new Date(createdAt).toLocaleString('tr-TR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : ''}
+                </span>
             <CardHeader
                 avatar={
                     <Link className='post-avatar-link' to={{pathname:'/users/' + userId}}>
@@ -153,18 +174,18 @@ function Post(props) {
                     aria-label="add to favorites">
                         <FavoriteIcon style={isLiked?{color:'red'} : null}/>
 
-                        <IconButton>
+                        <span style={{ marginLeft: 6, fontWeight: 500, color: '#555', fontSize: 16 }}>
                             {likeCount}
-                        </IconButton>
+                        </span>
                 </IconButton>
                 :
                 <IconButton 
                     onClick={handleLike} 
                     aria-label="add to favorites">
                     <FavoriteIcon style={isLiked?{color:'red'} : null}/>
-                    <IconButton>
+                     <span style={{ marginLeft: 6, fontWeight: 500, color: '#555', fontSize: 16 }}>
                         {likeCount}
-                    </IconButton>
+                    </span>
                 </IconButton> }
                 <ExpandMore
                     expand={expanded}
@@ -179,7 +200,11 @@ function Post(props) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <Container fixed className='post-comments-container'>
                 {error ? "error" : isLoaded ? commentList.map(comment=>(
-                    <Comment  userId={comment.userId} username={comment.username} text={comment.text}></Comment>
+                    <Comment  
+                    key={comment.id}
+                    userId={comment.userId} 
+                    username={comment.username} 
+                    text={comment.text}></Comment>
                 )) : "Loading"}
 
                 {disabled ? "" : 

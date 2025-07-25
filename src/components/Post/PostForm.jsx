@@ -128,7 +128,7 @@ function PostForm(props) {
                     onChange={ (input) => handleTitle(input.target.value)}/>}
             />
             <CardContent>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" component="div"sx={{ color: 'text.secondary' }}>
                     {<OutlinedInput 
                     className="postForm-textInput"
                     id='outlined_adorment-amount'

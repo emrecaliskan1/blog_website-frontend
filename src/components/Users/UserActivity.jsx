@@ -30,26 +30,6 @@ function PopUp(props) {
     const [post, setPost] = useState();
     const {isOpen, postId, setIsOpen} = props;
 
-    // const getPost = () => {
-    //     fetch("http://localhost:8080/posts/" + postId, {
-    //         method: "GET",
-    //         headers: {
-    //             "Authorization": localStorage.getItem("tokenKey"),
-    //             "Content-Type": "application/json"
-    //         }
-    //     })
-    //     .then(res => res.json())
-    //     .then(
-    //         (result) => {
-    //             console.log(result);
-    //             setPost(result);
-    //         },
-    //         (error) => {
-    //             console.log(error);
-    //         }
-    //     );
-    // };
-
     const getPost = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/posts/${postId}`, {
@@ -83,64 +63,61 @@ function PopUp(props) {
         setOpen(isOpen)
     },[isOpen])
     
-
-    
-
     return(
-    <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        
-      </Button>
-      <Dialog
-        BackdropProps={{
-            style: { backgroundColor: "rgba(0,0,0,0.4)" }
-        }}
-        PaperProps={{
-         className: "user-activity-modal-paper"
-        }}
-        maxWidth="sm"
-        fullWidth
-        open={open}
-        onClose={handleClose}
-        slots={{
-          transition: Transition,
-        }}
-      >
-        <AppBar 
-            position="static"
-            sx={{ backgroundColor: "#2a6078", borderRadius: "16px 16px 0 0" }}
-            elevation={0}
+        <React.Fragment>
+        <Button variant="outlined" onClick={handleClickOpen}>
+            
+        </Button>
+        <Dialog
+            BackdropProps={{
+                style: { backgroundColor: "rgba(0,0,0,0.4)" }
+            }}
+            PaperProps={{
+            className: "user-activity-modal-paper"
+            }}
+            maxWidth="sm"
+            fullWidth
+            open={open}
+            onClose={handleClose}
+            slots={{
+            transition: Transition,
+            }}
         >
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
+            <AppBar 
+                position="static"
+                sx={{ backgroundColor: "#2a6078", borderRadius: "16px 16px 0 0" }}
+                elevation={0}
             >
-              <CloseIcon />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Close
-            </Typography>
-          </Toolbar>
-        </AppBar>
+            <Toolbar>
+                <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+                >
+                <CloseIcon />
+                </IconButton>
+                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Close
+                </Typography>
+            </Toolbar>
+            </AppBar>
 
-         <div style={{ padding: 24, minWidth: 350, maxWidth: 600 }}>
-                {post && (
-                    <Post
-                        likes={post.postLikes}
-                        postId={post.id}
-                        userId={post.userId}
-                        username={post.username || post.user?.username}
-                        title={post.title}
-                        text={post.text}
-                    />
-                )}
-            </div>
+            <div style={{ padding: 24, minWidth: 350, maxWidth: 600 }}>
+                    {post && (
+                        <Post
+                            likes={post.postLikes}
+                            postId={post.id}
+                            userId={post.userId}
+                            username={post.username || post.user?.username}
+                            title={post.title}
+                            text={post.text}
+                        />
+                    )}
+                </div>
 
-      </Dialog>
-    </React.Fragment>
+        </Dialog>
+        </React.Fragment>
     )
 }
 
@@ -223,27 +200,33 @@ function UserActivity(props) {
              {rows.map((row, index) => {
                 if (Array.isArray(row)) { 
                     return (
-                        <Button onClick={() => handleNotification(row[1])} key={index} sx={{ width: '100%', padding: 0 }}>
-
-                        <TableRow hover role="checkbox" tabIndex={-1}>
-                            <TableCell align="right">
+                        <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            onClick={() => handleNotification(row[1])}
+                            sx={{ cursor: "pointer" }}
+                            >
+                            <TableCell align="center">
                                 {row[2] + " " + row[0] + " your post"}
                             </TableCell>
                         </TableRow>
-
-                        </Button>
                     );
                 } else { 
                     return (
-                        <Button onClick={() => handleNotification(row.id)} key={index} sx={{ width: '100%', padding: 0 }}>
-
-                        <TableRow hover role="checkbox" tabIndex={-1}>
-                            <TableCell align="right">
-                            {row?.user?.username + " shared a post: " + row.title}
+                        <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            onClick={() => handleNotification(row.id)}
+                            sx={{ cursor: "pointer" }}
+                            >
+                            <TableCell align="center">
+                                {row?.user?.username + " shared a post: " + row.title}
                             </TableCell>
                         </TableRow>
-
-                        </Button>
                     );
                 }
             })}
