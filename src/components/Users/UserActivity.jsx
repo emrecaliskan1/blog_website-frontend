@@ -196,9 +196,14 @@ function UserActivity(props) {
           </TableHead>
 
           <TableBody>
-
-             {rows.map((row, index) => {
-                if (Array.isArray(row)) { 
+             {rows
+                .sort((a, b) => {
+                const dateA = Array.isArray(a) ? new Date(a[3]) : new Date(a.createdAt);
+                const dateB = Array.isArray(b) ? new Date(b[3]) : new Date(b.createdAt);
+                return dateB - dateA;
+                })
+            .map((row, index) => {
+                if (Array.isArray(row)) {
                     return (
                         <TableRow
                             hover
@@ -207,25 +212,56 @@ function UserActivity(props) {
                             key={index}
                             onClick={() => handleNotification(row[1])}
                             sx={{ cursor: "pointer" }}
-                            >
-                            <TableCell align="center">
-                                {row[2] + " " + row[0] + " your post"}
-                            </TableCell>
+                        >
+                        <TableCell align="center">
+                            <div style={{ display: 'flex', justifyContent: 'center',position:'relative', alignItems: 'center' , width:'100%'}}>
+                                <span>{(row[2] || "Someone") + " " + (row[0] || "liked") + " your post"}</span>
+                                <span style={{ 
+                                    position:'absolute',
+                                    color: '#888', 
+                                    fontSize: 12, 
+                                    opacity: 0.7,
+                                    marginLeft: 16 
+                                }}>
+                                {row[3] ? new Date(row[3]).toLocaleString('tr-TR', {
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) : ''}
+                                </span>
+                            </div>
+                        </TableCell>
                         </TableRow>
-                    );
-                } else { 
-                    return (
-                        <TableRow
+                   );
+                    } else { 
+                        return (
+                         <TableRow
                             hover
                             role="checkbox"
                             tabIndex={-1}
                             key={index}
                             onClick={() => handleNotification(row.id)}
                             sx={{ cursor: "pointer" }}
-                            >
-                            <TableCell align="center">
-                                {row?.user?.username + " shared a post: " + row.title}
-                            </TableCell>
+                        >
+                        <TableCell align="center">
+                            <div style={{ display: 'flex', justifyContent: 'center',width:'100%', alignItems: 'center',position:'relative' }}>
+                                <span>{(row?.user?.username || row?.username || "Someone") + " shared a post: " + (row.title || "Untitled")}</span>
+                                <span style={{ 
+                                    color: '#888', 
+                                    fontSize: 12, 
+                                    opacity: 0.7,
+                                    marginLeft:20
+                                }}>
+                                {row.createdAt ? new Date(row.createdAt).toLocaleString('tr-TR', {
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) : ''}
+                                </span>
+                            </div>
+                         </TableCell>
                         </TableRow>
                     );
                 }
