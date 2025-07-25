@@ -6,18 +6,6 @@
   background: #f8fafb;
 }
 
-/* .auth-form {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px 0 rgba(46, 96, 120, 0.10);
-  padding: 48px 48px 36px 48px;
-  display: flex;
-  flex-direction: column;
-  min-width: 420px;
-  max-width: 620px !important;
-  gap: 22px;
-  border: 1.5px solid #a4cde0;
-} */
 
 .auth-form.MuiFormControl-root {
   background: #fff;
